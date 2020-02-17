@@ -38,7 +38,6 @@ function compareLineByLine($string1, $string2, $filename1, $filename2, $linter)
             echo "Line $lineNumber differ !" . PHP_EOL;
             echo "- (linted - indent $indent1) :" . $line1 . PHP_EOL;
             echo "- (expected  - indent $indent2) :" . $line2 . PHP_EOL;
-            echo "Last indentation level was " . $linter->getCurrentIndentationLevel() . PHP_EOL;
             die();
         }
     }
@@ -56,14 +55,14 @@ function findIndentationLevel($line)
 }
 
 
-require_once __DIR__ . '/../../src/Linter.php';
+require_once __DIR__ . '/../../bootstrap.php';
 
-$linter = new Linter();
+$linter = new LinterManager();
 
 $filesToTest = [
     'twig1.html.twig',
     'twig2.html.twig',
-    'twig3.html.twig',
+    //'twig3.html.twig',
 ];
 
 foreach ($filesToTest as $file) {
@@ -72,7 +71,7 @@ foreach ($filesToTest as $file) {
 
     echo 'Testing ' . $file . PHP_EOL;
 
-    $linted = $linter->getLintedFileContent($sample, 'twig');
+    $linted = $linter->lintFile($sample, LinterManager::TYPE_TWIG);
     $expected_content = file_get_contents($expected);
 
     compareLineByLine(
