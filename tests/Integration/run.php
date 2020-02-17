@@ -61,8 +61,9 @@ require_once __DIR__ . '/../../src/Linter.php';
 $linter = new Linter();
 
 $filesToTest = [
-    //'twig1.html.twig',
+    'twig1.html.twig',
     'twig2.html.twig',
+    'twig3.html.twig',
 ];
 
 foreach ($filesToTest as $file) {
