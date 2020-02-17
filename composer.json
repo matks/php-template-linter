@@ -1,0 +1,22 @@
+{
+  "name": "matks/php-template-linter",
+  "description": "Smarty and Twig basic linter",
+  "type": "library",
+  "keywords": [
+    "console", "linter"
+  ],
+  "homepage": "https://github.com/matks/php-template-linter",
+  "license": "MIT",
+  "minimum-stability": "dev",
+  "authors": [
+    {
+      "name": "Mathieu Ferment",
+      "email": "mathieu.ferment@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Matks\\PHPTemplateLinter\\":"src/"
+    }
+  }
+}

@@ -29,10 +29,10 @@ function compareLineByLine($string1, $string2, $filename1, $filename2, $linter)
         $line1 = $lines1[$x];
         $line2 = $lines2[$x];
 
-        if (isset($report[$x]) && $report[$x] === LineLinter::OPERATION_IGNORED_BECAUSE_MULTILINE) {
+        if (isset($report[$x]) && $report[$x] === \Matks\PHPTemplateLinter\LineLinter::OPERATION_IGNORED_BECAUSE_MULTILINE) {
             continue;
         }
-        if (isset($report[$x]) && $report[$x] === LineLinter::OPERATION_IGNORED) {
+        if (isset($report[$x]) && $report[$x] === \Matks\PHPTemplateLinter\LineLinter::OPERATION_IGNORED) {
             continue;
         }
 
@@ -61,9 +61,9 @@ function findIndentationLevel($line)
 }
 
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../vendor/autoload.php';
 
-$linter = new LinterManager();
+$linter = new \Matks\PHPTemplateLinter\LinterManager();
 
 $filesToTest = [
     'twig1.html.twig',
@@ -77,7 +77,7 @@ foreach ($filesToTest as $file) {
 
     echo 'Testing ' . $file . PHP_EOL;
 
-    $linted = $linter->lintFile($sample, LinterManager::TYPE_TWIG);
+    $linted = $linter->lintFile($sample, \Matks\PHPTemplateLinter\LinterManager::TYPE_TWIG);
     $expected_content = file_get_contents($expected);
 
     compareLineByLine(
