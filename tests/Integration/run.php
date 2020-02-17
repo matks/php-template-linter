@@ -14,9 +14,6 @@ function splitStringIntoArray($string)
 function compareLineByLine($string1, $string2, $filename1, $filename2, $linter)
 {
     $lines1 = splitStringIntoArray($string1);
-
-
-
     $lines2 = splitStringIntoArray($string2);
 
     if (count($lines1) !== count($lines2)) {
@@ -25,10 +22,19 @@ function compareLineByLine($string1, $string2, $filename1, $filename2, $linter)
         echo " - file $filename2 has " . count($lines2) . " lines" . PHP_EOL;
     }
 
+    $report = $linter->getLatestReport();
+
     for ($x = 0; $x < count($lines1); $x++) {
 
         $line1 = $lines1[$x];
         $line2 = $lines2[$x];
+
+        if (isset($report[$x]) && $report[$x] === LineLinter::OPERATION_IGNORED_BECAUSE_MULTILINE) {
+            continue;
+        }
+        if (isset($report[$x]) && $report[$x] === LineLinter::OPERATION_IGNORED) {
+            continue;
+        }
 
         if (($line1 != $line2) && (($line1 !== '') && ($line2 !== '')) ) {
             $lineNumber = $x + 1;
@@ -62,7 +68,7 @@ $linter = new LinterManager();
 $filesToTest = [
     'twig1.html.twig',
     'twig2.html.twig',
-    //'twig3.html.twig',
+    'twig3.html.twig',
 ];
 
 foreach ($filesToTest as $file) {
@@ -86,4 +92,4 @@ foreach ($filesToTest as $file) {
 }
 
 
-die('ok' . PHP_EOL);
+die('All tests pass !' . PHP_EOL);

@@ -7,6 +7,10 @@ class LineLinter
     const USECASE_CLOSING = 'closing';
     const USECASE_OPEN_AND_CLOSE = 'open-and-close';
 
+    const OPERATION_IGNORED = 'ignored';
+    const OPERATION_IGNORED_BECAUSE_MULTILINE = 'ignored-multiline';
+    const OPERATION_FIXED = 'fixed';
+
     private $debug = false;
     private $numberOfSpaces = 2;
 
@@ -25,10 +29,30 @@ class LineLinter
         $currentIndentationLevel = $input->currentIndentationLevel;
         $currentParsingStatus = $input->currentParsingStatus;
 
+        if ($currentParsingStatus > 0) {
+            $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $currentParsingStatus);
+
+            if ($this->debug) {
+                echo "Line $lineNumber is ignored because we are inside multi-line statement" . PHP_EOL;
+            }
+
+            return new LineLinterResult(
+                $line,
+                $currentIndentationLevel,
+                $currentParsingStatus,
+                self::OPERATION_IGNORED_BECAUSE_MULTILINE
+            );
+        }
+
         if ($this->shouldIgnoreThisLine($line, $lineNumber, $currentParsingStatus)) {
             $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $currentParsingStatus);
 
-            return new LineLinterResult($line, $currentIndentationLevel, $currentParsingStatus);
+            return new LineLinterResult(
+                $line,
+                $currentIndentationLevel,
+                $currentParsingStatus,
+                self::OPERATION_IGNORED
+            );
         }
 
         $noSpaceLine = ltrim($line, " \t");
@@ -72,7 +96,12 @@ class LineLinter
 
         $currentParsingStatus = $this->updateParsingStatus($noSpaceLine, $lineNumber, $currentParsingStatus);
 
-        return new LineLinterResult($indentedLine, $currentIndentationLevel, $currentParsingStatus);
+        return new LineLinterResult(
+            $indentedLine,
+            $currentIndentationLevel,
+            $currentParsingStatus,
+            self::OPERATION_FIXED
+        );
     }
 
     /**
@@ -139,14 +168,6 @@ class LineLinter
 
     private function shouldIgnoreThisLine($line, $lineNumber, $currentParsingStatus)
     {
-        if ($currentParsingStatus > 0) {
-            if ($this->debug) {
-                echo "Line $lineNumber is ignored because we are inside multi-line statement" . PHP_EOL;
-            }
-
-            return true;
-        }
-
         $result = $this->findHowManyOccurrences(
             $line,
             ['{#', '*']
@@ -165,7 +186,7 @@ class LineLinter
             $line,
             [
                 '{% block', '{% if', '{% for',
-                '<div',
+                '<div', '<form',
                 '<h', '<i', '<p', '<a',
                 '<thead', '<td', '<tr', '<th', '<table', '<tbody',
                 '<span', '<button',
@@ -199,7 +220,7 @@ class LineLinter
             $line,
             [
                 '{% endblock', '{% endif', '{% endfor',
-                '</div',
+                '</div', '</form',
                 '</h', '</i', '</p', '</a',
                 '</thead', '</td', '</tr', '</th', '</table', '</tbody',
                 '</span', '</button'

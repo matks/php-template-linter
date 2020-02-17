@@ -7,6 +7,7 @@ class LinterManager
 
     private $numberOfSpaces = 4;
     private $debug = false;
+    private $latestReport = null;
 
     /**
      * @var LineLinter
@@ -50,6 +51,7 @@ class LinterManager
         $lineNumber = 1;
 
         $i = 0;
+        $report = [];
 
         if ($handle) {
             // @todo: it skips last line if last line is empty !!!
@@ -61,6 +63,8 @@ class LinterManager
                 $lintedLine = $lintResult->lintedLine;
                 $currentParsingStatus = $lintResult->updatedParsingStatus;
                 $currentIndentationLevel = $lintResult->updatedIndentationLevel;
+
+                $report[$i] = $lintResult->operationPerformed;
 
                 $i++;
 
@@ -81,6 +85,8 @@ class LinterManager
 
         echo "Parsed $i lines" . PHP_EOL;
 
+        $this->latestReport = $report;
+
         return $result;
     }
 
@@ -94,5 +100,11 @@ class LinterManager
         $this->debug = false;
     }
 
-
+    /**
+     * @return null|string[]
+     */
+    public function getLatestReport()
+    {
+        return $this->latestReport;
+    }
 }
