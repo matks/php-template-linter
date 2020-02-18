@@ -17,6 +17,14 @@ class LineLinter
     private $numberOfSpaces = 2;
 
     /**
+     * @param bool $debug
+     */
+    public function __construct($debug = false)
+    {
+        $this->debug = $debug;
+    }
+
+    /**
      * @param int $numberOfSpaces
      */
     public function setNumberOfSpaces($numberOfSpaces)
@@ -46,7 +54,7 @@ class LineLinter
             );
         }
 
-        if ($this->shouldIgnoreThisLine($line, $lineNumber, $currentParsingStatus)) {
+        if ($this->shouldIgnoreThisLine($line, $lineNumber)) {
             $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $currentParsingStatus);
 
             return new LineLinterResult(
@@ -113,13 +121,16 @@ class LineLinter
      *
      * @return string
      */
-    private function findUsecase($openingLineLevel, $openAndCloseLevel, $closingLineLevel)
+    public function findUsecase($openingLineLevel, $openAndCloseLevel, $closingLineLevel)
     {
-        if ($openAndCloseLevel > 0) {
-            return self::USECASE_OPEN_AND_CLOSE;
-        }
-
         if ($openingLineLevel == $closingLineLevel) {
+
+            $noOpenAndNoClose = ($openingLineLevel === 0 && $closingLineLevel === 0);
+
+            if ($noOpenAndNoClose && $openAndCloseLevel > 0) {
+                return self::USECASE_OPEN_AND_CLOSE;
+            }
+
             return self::USECASE_NOTHING;
         }
 
@@ -131,6 +142,10 @@ class LineLinter
             return self::USECASE_CLOSING;
         }
 
+        if ($openAndCloseLevel > 0) {
+            return self::USECASE_OPEN_AND_CLOSE;
+        }
+
         return self::USECASE_NOTHING;
     }
 
@@ -140,8 +155,14 @@ class LineLinter
      *    class="..."
      *    style="..."
      * >
+     *
+     * @param string $line
+     * @param int $lineNumber
+     * @param int $currentParsingStatus
+     *
+     * @return int
      */
-    private function updateParsingStatus($line, $lineNumber, $currentParsingStatus)
+    public function updateParsingStatus($line, $lineNumber, $currentParsingStatus)
     {
         $containsOpening = ['<', '(', '{', '['];
         $containsClosing = ['>', ')', '}', ']'];
@@ -168,7 +189,7 @@ class LineLinter
         return $currentParsingStatus;
     }
 
-    private function shouldIgnoreThisLine($line, $lineNumber, $currentParsingStatus)
+    public function shouldIgnoreThisLine($line, $lineNumber)
     {
         $result = $this->findHowManyOccurrences(
             $line,
@@ -182,7 +203,7 @@ class LineLinter
         return ($result > 0);
     }
 
-    private function isOpeningLine($line, $lineNumber)
+    public function isOpeningLine($line, $lineNumber)
     {
         $result = $this->findHowManyOccurrences(
             $line,
@@ -191,7 +212,7 @@ class LineLinter
                 '<div', '<form',
                 '<h', '<i', '<p', '<a',
                 '<thead', '<td', '<tr', '<th', '<table', '<tbody',
-                '<span', '<button',
+                '<span', '<button', '<label',
             ]
         );
 
@@ -202,7 +223,7 @@ class LineLinter
         return $result;
     }
 
-    private function isSpecialLine($line, $lineNumber)
+    public function isSpecialLine($line, $lineNumber)
     {
         $result = $this->findHowManyOccurrences(
             $line,
@@ -216,7 +237,7 @@ class LineLinter
         return $result;
     }
 
-    private function isClosingLine($line, $lineNumber)
+    public function isClosingLine($line, $lineNumber)
     {
         $result = $this->findHowManyOccurrences(
             $line,
@@ -225,7 +246,7 @@ class LineLinter
                 '</div', '</form',
                 '</h', '</i', '</p', '</a',
                 '</thead', '</td', '</tr', '</th', '</table', '</tbody',
-                '</span', '</button'
+                '</span', '</button', '</label',
             ]
         );
 
@@ -242,7 +263,7 @@ class LineLinter
      *
      * @return int
      */
-    private function findHowManyOccurrences($line, $contains = [])
+    public function findHowManyOccurrences($line, $contains = [])
     {
         $level = 0;
 
@@ -258,14 +279,14 @@ class LineLinter
      *
      * @return string
      */
-    private function putXBlankSpace($number)
+    public function putXBlankSpace($number)
     {
         $result = str_repeat(" ", $number);
 
         return $result;
     }
 
-    private function incrementIndentationLevel($currentIndentationLevel)
+    public function incrementIndentationLevel($currentIndentationLevel)
     {
         $currentIndentationLevel += $this->numberOfSpaces;
 
@@ -276,7 +297,7 @@ class LineLinter
         return $currentIndentationLevel;
     }
 
-    private function decrementIndentationLevel($currentIndentationLevel)
+    public function decrementIndentationLevel($currentIndentationLevel)
     {
         $currentIndentationLevel -= $this->numberOfSpaces;
 

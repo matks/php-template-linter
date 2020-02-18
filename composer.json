@@ -3,7 +3,8 @@
   "description": "Smarty and Twig basic linter",
   "type": "library",
   "keywords": [
-    "console", "linter"
+    "console",
+    "linter"
   ],
   "homepage": "https://github.com/matks/php-template-linter",
   "license": "MIT",
@@ -16,7 +17,15 @@
   ],
   "autoload": {
     "psr-4": {
-      "Matks\\PHPTemplateLinter\\":"src/"
+      "Matks\\PHPTemplateLinter\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "MatksTests\\": "tests/"
+    }
+  },
+  "require": {
+    "phpunit/phpunit": "^7.0"
   }
 }
