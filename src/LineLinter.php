@@ -10,6 +10,7 @@ class LineLinter
     const USECASE_OPEN_AND_CLOSE = 'open-and-close';
 
     const OPERATION_IGNORED = 'ignored';
+    const OPERATION_NOTHING = 'nothing';
     const OPERATION_IGNORED_BECAUSE_MULTILINE = 'ignored-multiline';
     const OPERATION_FIXED = 'fixed';
 
@@ -82,22 +83,43 @@ class LineLinter
         switch ($case) {
             case self::USECASE_NOTHING:
                 $indentedLine = $this->putXBlankSpace($currentIndentationLevel) . $noSpaceLine;
+                $operationPerformed = self::OPERATION_NOTHING;
                 break;
 
             case self::USECASE_OPEN_AND_CLOSE:
                 $currentIndentationLevel = $this->decrementIndentationLevel($currentIndentationLevel);
                 $indentedLine = $this->putXBlankSpace($currentIndentationLevel) . $noSpaceLine;
                 $currentIndentationLevel = $this->incrementIndentationLevel($currentIndentationLevel);
+
+                if ($indentedLine !== $line) {
+                    $operationPerformed = self::OPERATION_FIXED;
+                } else {
+                    $operationPerformed = self::OPERATION_NOTHING;
+                }
                 break;
 
             case self::USECASE_OPENING:
                 $indentedLine = $this->putXBlankSpace($currentIndentationLevel) . $noSpaceLine;
                 $currentIndentationLevel = $this->incrementIndentationLevel($currentIndentationLevel);
+
+                if ($indentedLine !== $line) {
+                    $operationPerformed = self::OPERATION_FIXED;
+                } else {
+                    $operationPerformed = self::OPERATION_NOTHING;
+                }
+
                 break;
 
             case self::USECASE_CLOSING:
                 $currentIndentationLevel = $this->decrementIndentationLevel($currentIndentationLevel);
                 $indentedLine = $this->putXBlankSpace($currentIndentationLevel) . $noSpaceLine;
+
+                if ($indentedLine !== $line) {
+                    $operationPerformed = self::OPERATION_FIXED;
+                } else {
+                    $operationPerformed = self::OPERATION_NOTHING;
+                }
+
                 break;
 
             default:
@@ -110,7 +132,7 @@ class LineLinter
             $indentedLine,
             $currentIndentationLevel,
             $currentParsingStatus,
-            self::OPERATION_FIXED
+            $operationPerformed
         );
     }
 
