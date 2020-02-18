@@ -26,6 +26,6 @@
     }
   },
   "require": {
-    "phpunit/phpunit": "^9.1@dev"
+    "phpunit/phpunit": "^7.0"
   }
 }
