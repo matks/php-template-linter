@@ -13,7 +13,7 @@ class LineLinter
     const OPERATION_IGNORED_BECAUSE_MULTILINE = 'ignored-multiline';
     const OPERATION_FIXED = 'fixed';
 
-    private $debug = true;
+    private $debug = false;
     private $numberOfSpaces = 2;
 
     /**
