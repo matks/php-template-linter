@@ -69,6 +69,8 @@ $filesToTest = [
     'twig1.html.twig',
     'twig2.html.twig',
     'twig3.html.twig',
+    'twig4.html.twig',
+    'twig5.html.twig',
 ];
 
 foreach ($filesToTest as $file) {

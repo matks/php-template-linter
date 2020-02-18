@@ -13,7 +13,7 @@ class LineLinter
     const OPERATION_IGNORED_BECAUSE_MULTILINE = 'ignored-multiline';
     const OPERATION_FIXED = 'fixed';
 
-    private $debug = false;
+    private $debug = true;
     private $numberOfSpaces = 2;
 
     /**
@@ -46,7 +46,7 @@ class LineLinter
             );
         }
 
-        if ($this->shouldIgnoreThisLine($line, $lineNumber, $currentParsingStatus)) {
+        if ($this->shouldIgnoreThisLine($line, $lineNumber)) {
             $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $currentParsingStatus);
 
             return new LineLinterResult(
@@ -115,11 +115,14 @@ class LineLinter
      */
     private function findUsecase($openingLineLevel, $openAndCloseLevel, $closingLineLevel)
     {
-        if ($openAndCloseLevel > 0) {
-            return self::USECASE_OPEN_AND_CLOSE;
-        }
-
         if ($openingLineLevel == $closingLineLevel) {
+
+            $noOpenAndNoClose = ($openingLineLevel === 0 && $closingLineLevel === 0);
+
+            if ($noOpenAndNoClose && $openAndCloseLevel > 0) {
+                return self::USECASE_OPEN_AND_CLOSE;
+            }
+
             return self::USECASE_NOTHING;
         }
 
@@ -129,6 +132,10 @@ class LineLinter
 
         if ($closingLineLevel > $openingLineLevel) {
             return self::USECASE_CLOSING;
+        }
+
+        if ($openAndCloseLevel > 0) {
+            return self::USECASE_OPEN_AND_CLOSE;
         }
 
         return self::USECASE_NOTHING;
@@ -168,7 +175,7 @@ class LineLinter
         return $currentParsingStatus;
     }
 
-    private function shouldIgnoreThisLine($line, $lineNumber, $currentParsingStatus)
+    private function shouldIgnoreThisLine($line, $lineNumber)
     {
         $result = $this->findHowManyOccurrences(
             $line,
@@ -191,7 +198,7 @@ class LineLinter
                 '<div', '<form',
                 '<h', '<i', '<p', '<a',
                 '<thead', '<td', '<tr', '<th', '<table', '<tbody',
-                '<span', '<button',
+                '<span', '<button', '<label',
             ]
         );
 
@@ -225,7 +232,7 @@ class LineLinter
                 '</div', '</form',
                 '</h', '</i', '</p', '</a',
                 '</thead', '</td', '</tr', '</th', '</table', '</tbody',
-                '</span', '</button'
+                '</span', '</button', '</label',
             ]
         );
 
