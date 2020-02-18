@@ -16,7 +16,7 @@ TODO
 
 ## Unit
 
-TODO
+Run `$ vendor/bin/phpunit tests/`
 
 ## Integration
 
