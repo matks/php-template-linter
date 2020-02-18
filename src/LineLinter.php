@@ -1,5 +1,7 @@
 <?php
 
+namespace Matks\PHPTemplateLinter;
+
 class LineLinter
 {
     const USECASE_NOTHING = 'nothing';

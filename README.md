@@ -21,3 +21,8 @@ TODO
 ## Integration
 
 Run `$ php tests/Integration/run.php`
+
+## Insights
+
+Nothing fancy behind the curtain. I'm mostly using `strpos()` or
+`preg_match()` to parse files.

@@ -1,5 +1,7 @@
 <?php
 
+namespace Matks\PHPTemplateLinter;
+
 class LineLinterResult
 {
     /** @var string */

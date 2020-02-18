@@ -1,5 +1,7 @@
 <?php
 
+namespace Matks\PHPTemplateLinter;
+
 class LinterManager
 {
     const TYPE_SMARTY = 'smarty';
