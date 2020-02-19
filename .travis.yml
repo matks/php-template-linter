@@ -12,4 +12,4 @@ script:
  - vendor/bin/phpunit tests/
  - php tests/Integration/check-samples.php
  - php tests/Integration/check-configurations.php
- - vendor/bin/phpstan analyse src tests
+ - vendor/bin/phpstan analyse src tests --level=5
