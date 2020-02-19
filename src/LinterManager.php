@@ -18,7 +18,8 @@ class LinterManager
 
     public function __construct()
     {
-        $this->lineLinter = new LineLinter();
+        $defaultConfig = new DefaultConfiguration();
+        $this->lineLinter = new LineLinter($defaultConfig->get());
     }
 
     /**
@@ -37,14 +38,6 @@ class LinterManager
         if (!in_array($type, [self::TYPE_SMARTY, self::TYPE_TWIG])) {
             throw new \InvalidArgumentException('Cannot handle file type ' . $type);
         }
-
-        if ($type === self::TYPE_TWIG) {
-            $this->numberOfSpaces = 2;
-        } else if ($type === self::TYPE_SMARTY) {
-            $this->numberOfSpaces = 2;
-        }
-
-        $this->lineLinter->setNumberOfSpaces($this->numberOfSpaces);
 
         $handle = fopen($filepath, 'r+');
         $result = '';
@@ -81,7 +74,7 @@ class LinterManager
 
             fclose($handle);
         } else {
-            throw new \RuntimeException('Failed to read file '.$filepath);
+            throw new \RuntimeException('Failed to read file ' . $filepath);
         }
 
         echo "Parsed $i lines" . PHP_EOL;
