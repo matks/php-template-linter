@@ -37,7 +37,6 @@ Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 
 ## TODO
 
-- handle "last line" bug
 - enable recursive application usage
 - use Logger instead of echo
 - use OutputInterface instead of echo

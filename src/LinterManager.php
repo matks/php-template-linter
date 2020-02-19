@@ -56,7 +56,6 @@ class LinterManager
         $report = [];
 
         if ($handle) {
-            // @todo: it skips last line if last line is empty !!!
             while (($line = fgets($handle)) !== false) {
 
                 $input = new LineLinterInput($lineNumber, $line, $currentIndentationLevel, $currentParsingStatus);
