@@ -2,6 +2,7 @@
 
 namespace MatksTests\Unit;
 
+use Matks\PHPTemplateLinter\DefaultConfiguration;
 use Matks\PHPTemplateLinter\LineLinter;
 use Matks\PHPTemplateLinter\LineLinterInput;
 use Matks\PHPTemplateLinter\LineLinterResult;
@@ -11,7 +12,7 @@ class LineLinterFixIndentationTest extends TestCase
 {
     public function testNothingToFix()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '    <div>';
         $input = new LineLinterInput(1, $line, 4, 0);
@@ -24,7 +25,7 @@ class LineLinterFixIndentationTest extends TestCase
 
     public function testFixLineOne()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '    <div>';
         $input = new LineLinterInput(1, $line, 2, 0);
@@ -37,7 +38,7 @@ class LineLinterFixIndentationTest extends TestCase
 
     public function testFixLineTwo()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '{% else %}';
         $input = new LineLinterInput(1, $line, 4, 0);
@@ -50,7 +51,7 @@ class LineLinterFixIndentationTest extends TestCase
 
     public function testFixLineThree()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '    <div>';
         $input = new LineLinterInput(1, $line, 6, 0);
@@ -63,7 +64,7 @@ class LineLinterFixIndentationTest extends TestCase
 
     public function testFixLineMultiLine()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '    <a href="aaa">';
         $input = new LineLinterInput(1, $line, 6, 2);

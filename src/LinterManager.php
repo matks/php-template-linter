@@ -18,8 +18,7 @@ class LinterManager
 
     public function __construct()
     {
-        $defaultConfig = new DefaultConfiguration();
-        $this->lineLinter = new LineLinter($defaultConfig->get());
+        $this->lineLinter = new LineLinter(DefaultConfiguration::get());
     }
 
     /**

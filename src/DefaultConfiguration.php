@@ -10,7 +10,7 @@ class DefaultConfiguration
     /**
      * @return LineLinterConfiguration
      */
-    public function get()
+    public static function get()
     {
         $configuration = [
             LineLinterConfigurationItem::TYPE_IGNORE_CHAR => [
