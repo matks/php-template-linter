@@ -2,6 +2,7 @@
 
 namespace MatksTests\Unit;
 
+use Matks\PHPTemplateLinter\DefaultConfiguration;
 use Matks\PHPTemplateLinter\LineLinter;
 use PHPUnit\Framework\TestCase;
 
@@ -9,7 +10,7 @@ class LineLinterFindUsecaseTest extends TestCase
 {
     public function testFindUsecaseOpening()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $result = $linter->findUsecase(1, 0, 0);
 
@@ -18,7 +19,7 @@ class LineLinterFindUsecaseTest extends TestCase
 
     public function testFindUsecaseClosing()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $result = $linter->findUsecase(0, 0, 1);
 
@@ -27,7 +28,7 @@ class LineLinterFindUsecaseTest extends TestCase
 
     public function testFindUsecaseOpenAndClose()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $result = $linter->findUsecase(0, 1, 0);
 
@@ -36,7 +37,7 @@ class LineLinterFindUsecaseTest extends TestCase
 
     public function testFindUsecaseComplexOpening()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $result = $linter->findUsecase(4, 1, 3);
 
@@ -45,7 +46,7 @@ class LineLinterFindUsecaseTest extends TestCase
 
     public function testFindUsecaseComplexClosing()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $result = $linter->findUsecase(4, 9, 11);
 
@@ -54,7 +55,7 @@ class LineLinterFindUsecaseTest extends TestCase
 
     public function testFindUsecaseComplexNothing()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $result = $linter->findUsecase(10, 1, 10);
 

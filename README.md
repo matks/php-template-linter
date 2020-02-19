@@ -28,7 +28,11 @@ Run `$ vendor/bin/phpunit tests/`
 
 ## Integration
 
-Run `$ php tests/Integration/run.php`
+Run
+```
+$ php tests/Integration/check-samples.php
+$ php tests/Integration/check-configurations.php
+```
 
 ## Insights
 

@@ -7,6 +7,8 @@ use MatksTests\Integration\TestUtils;
 
 $linter = new LinterManager();
 
+
+
 $filesToTest = [
     'twig1.html.twig',
     'twig2.html.twig',
@@ -36,4 +38,4 @@ foreach ($filesToTest as $file) {
 }
 
 
-die('All tests pass !' . PHP_EOL);
+die('All sample tests pass !' . PHP_EOL);

@@ -10,5 +10,6 @@ before_script:
 
 script:
  - vendor/bin/phpunit tests/
- - php tests/Integration/run.php
+ - php tests/Integration/check-samples.php
+ - php tests/Integration/check-configurations.php
  - vendor/bin/phpstan analyse src tests

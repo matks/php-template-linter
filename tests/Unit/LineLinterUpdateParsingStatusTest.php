@@ -2,6 +2,7 @@
 
 namespace MatksTests\Unit;
 
+use Matks\PHPTemplateLinter\DefaultConfiguration;
 use Matks\PHPTemplateLinter\LineLinter;
 use PHPUnit\Framework\TestCase;
 
@@ -9,7 +10,7 @@ class LineLinterUpdateParsingStatusTest extends TestCase
 {
     public function testUpdateParsingStatusNone()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '<div href="bbb">';
         $result = $linter->findHowManyOccurrences($line, ['a']);
@@ -19,7 +20,7 @@ class LineLinterUpdateParsingStatusTest extends TestCase
 
     public function testUpdateParsingStatusOne()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '<a href="s">';
         $result = $linter->findHowManyOccurrences($line, ['a']);
@@ -29,7 +30,7 @@ class LineLinterUpdateParsingStatusTest extends TestCase
 
     public function testUpdateParsingStatusTwo()
     {
-        $linter = new LineLinter(false);
+        $linter = new LineLinter(DefaultConfiguration::get(), false);
 
         $line = '<a href="aff">';
         $result = $linter->findHowManyOccurrences($line, ['a']);

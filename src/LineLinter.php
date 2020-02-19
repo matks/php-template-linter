@@ -14,25 +14,33 @@ class LineLinter
     const OPERATION_IGNORED_BECAUSE_MULTILINE = 'ignored-multiline';
     const OPERATION_FIXED = 'fixed';
 
+    /**
+     * @var bool
+     */
     private $debug = false;
-    private $numberOfSpaces = 2;
 
     /**
+     * @var LineLinterConfigurationProcessor
+     */
+    private $configurationProcessor;
+
+    /**
+     * @param LineLinterConfiguration $configuration
      * @param bool $debug
      */
-    public function __construct($debug = false)
+    public function __construct(LineLinterConfiguration $configuration, $debug = false)
     {
         $this->debug = $debug;
+
+        $this->configurationProcessor = new LineLinterConfigurationProcessor();
+        $this->configurationProcessor->loadConfiguration($configuration);
     }
 
     /**
-     * @param int $numberOfSpaces
+     * @param LineLinterInput $input
+     *
+     * @return LineLinterResult
      */
-    public function setNumberOfSpaces($numberOfSpaces)
-    {
-        $this->numberOfSpaces = $numberOfSpaces;
-    }
-
     public function fixLineIndentation(LineLinterInput $input)
     {
         $line = $input->inputLine;
@@ -215,7 +223,7 @@ class LineLinter
     {
         $result = $this->findHowManyOccurrences(
             $line,
-            ['{#', '*']
+            $this->configurationProcessor->getIgnoreChars()
         );
 
         if ($result > 0 && $this->debug) {
@@ -229,13 +237,7 @@ class LineLinter
     {
         $result = $this->findHowManyOccurrences(
             $line,
-            [
-                '{% block', '{% if', '{% for',
-                '<div', '<form',
-                '<h', '<i', '<p', '<a',
-                '<thead', '<td', '<tr', '<th', '<table', '<tbody',
-                '<span', '<button', '<label',
-            ]
+            $this->configurationProcessor->getOpeningChars()
         );
 
         if ($result > 0 && $this->debug) {
@@ -249,7 +251,7 @@ class LineLinter
     {
         $result = $this->findHowManyOccurrences(
             $line,
-            ['{% else']
+            $this->configurationProcessor->getOpenAndCloseChars()
         );
 
         if ($result > 0 && $this->debug) {
@@ -263,13 +265,7 @@ class LineLinter
     {
         $result = $this->findHowManyOccurrences(
             $line,
-            [
-                '{% endblock', '{% endif', '{% endfor',
-                '</div', '</form',
-                '</h', '</i', '</p', '</a',
-                '</thead', '</td', '</tr', '</th', '</table', '</tbody',
-                '</span', '</button', '</label',
-            ]
+            $this->configurationProcessor->getClosingChars()
         );
 
         if ($result > 0 && $this->debug) {
@@ -310,7 +306,7 @@ class LineLinter
 
     public function incrementIndentationLevel($currentIndentationLevel)
     {
-        $currentIndentationLevel += $this->numberOfSpaces;
+        $currentIndentationLevel += $this->configurationProcessor->getIndentationLevel();
 
         if ($this->debug) {
             echo "Indentation level raised to " . $currentIndentationLevel . PHP_EOL;
@@ -321,7 +317,7 @@ class LineLinter
 
     public function decrementIndentationLevel($currentIndentationLevel)
     {
-        $currentIndentationLevel -= $this->numberOfSpaces;
+        $currentIndentationLevel -= $this->configurationProcessor->getIndentationLevel();
 
         if ($currentIndentationLevel < 0) {
             $currentIndentationLevel = 0;
