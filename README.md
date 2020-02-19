@@ -34,3 +34,11 @@ Run `$ php tests/Integration/run.php`
 
 Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 `preg_match()` to parse files.
+
+## TODO
+
+- handle "last line" bug
+- enable recursive application usage
+- use Logger instead of echo
+- use OutputInterface instead of echo
+- enable characters configuration
