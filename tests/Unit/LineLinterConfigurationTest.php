@@ -63,25 +63,12 @@ class LineLinterConfigurationTest extends TestCase
     private function buildConfiguration()
     {
         $configuration = [
-            LineLinterConfigurationItem::TYPE_IGNORE_CHAR => ['a',],
+            LineLinterConfigurationItem::TYPE_IGNORE_CHAR => ['a'],
             LineLinterConfigurationItem::TYPE_OPENING_CHAR => ['b'],
             LineLinterConfigurationItem::TYPE_OPEN_AND_CLOSE_CHAR => ['c'],
             LineLinterConfigurationItem::TYPE_CLOSING_CHAR => ['d'],
         ];
 
-        $configurationItems = [];
-
-        foreach ($configuration as $configurationType => $items) {
-            foreach ($items as $item) {
-                $configurationItems[] = new LineLinterConfigurationItem(
-                    $item,
-                    $configurationType
-                );
-            }
-        }
-
-        $configuration = new LineLinterConfiguration($configurationItems, 2);
-
-        return $configuration;
+        return LineLinterConfiguration::fromArray($configuration, 2);
     }
 }

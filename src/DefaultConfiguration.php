@@ -35,17 +35,6 @@ class DefaultConfiguration
             ],
         ];
 
-        $configurationItems = [];
-
-        foreach ($configuration as $configurationType => $items) {
-            foreach ($items as $item) {
-                $configurationItems[] = new LineLinterConfigurationItem(
-                    $item,
-                    $configurationType
-                );
-            }
-        }
-
-        return new LineLinterConfiguration($configurationItems, self::DEFAULT_INDENTATION_LEVEL);
+        return LineLinterConfiguration::fromArray($configuration, self::DEFAULT_INDENTATION_LEVEL);
     }
 }

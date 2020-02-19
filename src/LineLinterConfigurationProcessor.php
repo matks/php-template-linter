@@ -5,14 +5,14 @@ namespace Matks\PHPTemplateLinter;
 class LineLinterConfigurationProcessor
 {
     /** @var int[] */
-    private $ignoreChars;
+    private $ignoreChars = [];
     /** @var int[] */
-    private $openingChars;
+    private $openingChars = [];
     /** @var int[] */
-    private $openAndCloseChars;
+    private $openAndCloseChars = [];
     /** @var int[] */
-    private $closingChars;
-
+    private $closingChars = [];
+    /** @var int */
     private $indentationLevel;
 
     /**

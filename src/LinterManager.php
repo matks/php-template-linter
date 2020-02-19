@@ -16,9 +16,13 @@ class LinterManager
      */
     private $lineLinter;
 
-    public function __construct()
+    public function __construct(LineLinterConfiguration $configuration = null)
     {
-        $this->lineLinter = new LineLinter(DefaultConfiguration::get());
+        if (null === $configuration) {
+            $configuration = DefaultConfiguration::get();
+        }
+
+        $this->lineLinter = new LineLinter($configuration);
     }
 
     /**

@@ -23,6 +23,28 @@ class LineLinterConfiguration
     }
 
     /**
+     * @param array $configuration
+     * @param int $indentationLevel
+     *
+     * @return LineLinterConfiguration
+     */
+    public static function fromArray(array $configuration, $indentationLevel)
+    {
+        $configurationItems = [];
+
+        foreach ($configuration as $configurationType => $items) {
+            foreach ($items as $item) {
+                $configurationItems[] = new LineLinterConfigurationItem(
+                    $item,
+                    $configurationType
+                );
+            }
+        }
+
+        return new self($configurationItems, $indentationLevel);
+    }
+
+    /**
      * @param LineLinterConfigurationItem $item
      */
     public function addItem(LineLinterConfigurationItem $item)
