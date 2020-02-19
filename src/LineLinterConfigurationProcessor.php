@@ -4,13 +4,13 @@ namespace Matks\PHPTemplateLinter;
 
 class LineLinterConfigurationProcessor
 {
-    /** @var int[] */
+    /** @var string[] */
     private $ignoreChars = [];
-    /** @var int[] */
+    /** @var string[] */
     private $openingChars = [];
-    /** @var int[] */
+    /** @var string[] */
     private $openAndCloseChars = [];
-    /** @var int[] */
+    /** @var string[] */
     private $closingChars = [];
     /** @var int */
     private $indentationLevel;
@@ -49,7 +49,7 @@ class LineLinterConfigurationProcessor
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function getIgnoreChars()
     {
@@ -57,7 +57,7 @@ class LineLinterConfigurationProcessor
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function getOpeningChars()
     {
@@ -65,7 +65,7 @@ class LineLinterConfigurationProcessor
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function getOpenAndCloseChars()
     {
@@ -73,7 +73,7 @@ class LineLinterConfigurationProcessor
     }
 
     /**
-     * @return int[]
+     * @return string[]
      */
     public function getClosingChars()
     {

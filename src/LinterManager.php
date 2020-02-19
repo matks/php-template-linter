@@ -7,7 +7,6 @@ class LinterManager
     const TYPE_SMARTY = 'smarty';
     const TYPE_TWIG = 'twig';
 
-    private $numberOfSpaces = 4;
     private $debug = false;
     private $latestReport = null;
 
@@ -16,6 +15,9 @@ class LinterManager
      */
     private $lineLinter;
 
+    /**
+     * @param LineLinterConfiguration $configuration
+     */
     public function __construct(LineLinterConfiguration $configuration = null)
     {
         if (null === $configuration) {

@@ -276,7 +276,7 @@ class LineLinter
     }
 
     /**
-     * @param $line
+     * @param string $line
      * @param array $contains
      *
      * @return int

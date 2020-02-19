@@ -58,7 +58,7 @@ class LineLinterConfigurationTest extends TestCase
     }
 
     /**
-     * @return LineLinter
+     * @return LineLinterConfiguration
      */
     private function buildConfiguration()
     {

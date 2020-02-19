@@ -44,4 +44,3 @@ Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 - enable recursive application usage
 - use Logger instead of echo
 - use OutputInterface instead of echo
-- enable characters configuration

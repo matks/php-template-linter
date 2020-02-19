@@ -7,7 +7,7 @@ use Matks\PHPTemplateLinter\LinterManager;
 class TestUtils
 {
     /**
-     * @param $string
+     * @param string $string
      *
      * @return array[]|false|string[]
      */
