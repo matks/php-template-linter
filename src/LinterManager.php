@@ -32,13 +32,15 @@ class LinterManager
      * @param string $type
      * @param bool $dryRun
      *
-     * @return string
+     * @return bool
      */
     public function lintFile($filepath, $type, $dryRun = false)
     {
         $lintedFileContent = $this->getLintedFileContent($filepath, $type);
 
         file_put_contents($filepath, $lintedFileContent);
+
+        return true;
     }
 
     /**

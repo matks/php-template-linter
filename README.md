@@ -18,7 +18,15 @@ Primary usage (WIP) is to fix indentation. I might add more features later.
 
 # Usage
 
-TODO
+## Install
+
+`$ composer install`
+
+## Run
+
+`$ php linter fix <target>`
+
+See `$ php linter fix -h` for available options
 
 # Tests
 
@@ -32,6 +40,13 @@ Run
 ```
 $ php tests/Integration/check-samples.php
 $ php tests/Integration/check-configurations.php
+```
+
+## Acceptance
+
+Run
+```
+$ php tests/Acceptance/run.php
 ```
 
 ## Insights
