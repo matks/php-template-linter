@@ -3,11 +3,9 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Matks\PHPTemplateLinter\LinterManager;
-use MatksTests\Integration\TestUtils;
+use MatksTests\TestUtils;
 
 $linter = new LinterManager();
-
-
 
 $filesToTest = [
     'twig1.html.twig',
@@ -15,6 +13,7 @@ $filesToTest = [
     'twig3.html.twig',
     'twig4.html.twig',
     'twig5.html.twig',
+    'twig6.html.twig',
 ];
 
 foreach ($filesToTest as $file) {
@@ -23,10 +22,10 @@ foreach ($filesToTest as $file) {
 
     echo 'Testing ' . $file . PHP_EOL;
 
-    $linted = $linter->lintFile($sample, LinterManager::TYPE_TWIG);
+    $linted = $linter->getLintedFileContent($sample, LinterManager::TYPE_TWIG);
     $expected_content = file_get_contents($expected);
 
-    TestUtils::compareLineByLine(
+    $result = TestUtils::compareLineByLine(
         $linted,
         $expected_content,
         '(linted) ' . basename($sample),
@@ -34,8 +33,13 @@ foreach ($filesToTest as $file) {
         $linter
     );
 
+    if ($result === false) {
+        echo 'Failure !'.PHP_EOL;
+        return 255;
+    }
+
     echo PHP_EOL;
 }
 
-
-die('All sample tests pass !' . PHP_EOL);
+echo 'All configuration tests pass !' . PHP_EOL;
+return 0;

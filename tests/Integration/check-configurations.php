@@ -3,7 +3,7 @@
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Matks\PHPTemplateLinter\LinterManager;
-use MatksTests\Integration\TestUtils;
+use MatksTests\TestUtils;
 use Matks\PHPTemplateLinter\LineLinterConfigurationItem;
 use Matks\PHPTemplateLinter\LineLinterConfiguration;
 
@@ -62,10 +62,10 @@ foreach ($filesToTest as $i => $expectedName) {
 
     echo 'Testing ' . $sampleName . ' with configuration ' . ($i + 1) . PHP_EOL;
 
-    $linted = $linters[$i]->lintFile($sample, LinterManager::TYPE_TWIG);
+    $linted = $linters[$i]->getLintedFileContent($sample, LinterManager::TYPE_TWIG);
     $expected_content = file_get_contents($expected);
 
-    TestUtils::compareLineByLine(
+    $result = TestUtils::compareLineByLine(
         $linted,
         $expected_content,
         '(linted) ' . basename($sample),
@@ -73,8 +73,14 @@ foreach ($filesToTest as $i => $expectedName) {
         $linters[$i]
     );
 
+    if ($result === false) {
+        echo 'Failure !'.PHP_EOL;
+        return 255;
+    }
+
     echo PHP_EOL;
 }
 
 
-die('All tests pass !' . PHP_EOL);
+echo 'All configuration tests pass !' . PHP_EOL;
+return 0;

@@ -32,17 +32,30 @@ class LinterManager
      * @param string $type
      * @param bool $dryRun
      *
-     * @return string
+     * @return bool
      */
     public function lintFile($filepath, $type, $dryRun = false)
+    {
+        $lintedFileContent = $this->getLintedFileContent($filepath, $type);
+
+        file_put_contents($filepath, $lintedFileContent);
+
+        return true;
+    }
+
+    /**
+     * @param string $filepath
+     * @param string $type
+     *
+     * @return string
+     */
+    public function getLintedFileContent($filepath, $type)
     {
         if (!file_exists($filepath)) {
             throw new \InvalidArgumentException('No file at ' . $filepath);
         }
 
-        if (!in_array($type, [self::TYPE_SMARTY, self::TYPE_TWIG])) {
-            throw new \InvalidArgumentException('Cannot handle file type ' . $type);
-        }
+        self::validateType($type);
 
         $handle = fopen($filepath, 'r+');
         $result = '';
@@ -105,5 +118,15 @@ class LinterManager
     public function getLatestReport()
     {
         return $this->latestReport;
+    }
+
+    /**
+     * @param string $type
+     */
+    public static function validateType($type)
+    {
+        if (!in_array($type, [self::TYPE_SMARTY, self::TYPE_TWIG])) {
+            throw new \InvalidArgumentException('Cannot handle file type ' . $type);
+        }
     }
 }
