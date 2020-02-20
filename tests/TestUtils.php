@@ -1,8 +1,9 @@
 <?php
 
-namespace MatksTests\Integration;
+namespace MatksTests;
 
 use Matks\PHPTemplateLinter\LinterManager;
+use Symfony\Component\Filesystem\Filesystem;
 
 class TestUtils
 {
@@ -21,10 +22,11 @@ class TestUtils
      * @param string $string2
      * @param string $filename1
      * @param string $filename2
+     * @param LinterManager $linter
      *
      * @param LinterManager $linter
      */
-    public static function compareLineByLine($string1, $string2, $filename1, $filename2, $linter)
+    public static function compareLineByLine($string1, $string2, $filename1, $filename2, $linter = null)
     {
         $lines1 = self::splitStringIntoArray($string1);
         $lines2 = self::splitStringIntoArray($string2);
@@ -33,9 +35,13 @@ class TestUtils
             echo "2 given files do not have same number of lines !" . PHP_EOL;
             echo " - file $filename1 has " . count($lines1) . " lines" . PHP_EOL;
             echo " - file $filename2 has " . count($lines2) . " lines" . PHP_EOL;
+            return false;
         }
 
-        $report = $linter->getLatestReport();
+        $report = null;
+        if (null !== $linter) {
+            $report = $linter->getLatestReport();
+        }
 
         for ($x = 0; $x < count($lines1); $x++) {
 
@@ -57,9 +63,11 @@ class TestUtils
                 echo "Line $lineNumber differ !" . PHP_EOL;
                 echo "- (linted - indent $indent1) :" . $line1 . PHP_EOL;
                 echo "- (expected  - indent $indent2) :" . $line2 . PHP_EOL;
-                die();
+                return false;
             }
         }
+
+        return true;
     }
 
     /**
@@ -76,5 +84,19 @@ class TestUtils
         }
 
         return $result;
+    }
+
+    public static function copySampleFolderIntoWorkspace()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(__DIR__ . '/Acceptance/workspace/');
+        $filesystem->mirror(__DIR__ . '/Acceptance/samples', __DIR__ . '/Acceptance/workspace/');
+    }
+
+    public static function emptyWorkspaceFolder()
+    {
+        $filesystem = new Filesystem();
+        $filesystem->remove(__DIR__ . '/Acceptance/workspace/');
+        $filesystem->mkdir(__DIR__ . '/Acceptance/workspace/');
     }
 }
