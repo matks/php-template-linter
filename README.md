@@ -56,6 +56,17 @@ Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 
 ## TODO
 
-- enable recursive application usage
+### V1
+
+- handle multi-line statements properly
+- enable use of custom config
+- enable use of dry-run option
+
+### Refacto
 - use Logger instead of echo
 - use OutputInterface instead of echo
+- better folder structure
+
+### V2
+
+Handle Smarty templates
