@@ -58,7 +58,6 @@ Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 
 ### V1
 
-- handle multi-line statements properly*
 - enable use of custom config
 - enable use of dry-run option
 - handle debug
@@ -71,29 +70,3 @@ Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 ### V2
 
 Handle Smarty templates
-
-*Found the issue:
-
-{{ form_start(privateNoteForm, {
-  'action': path('admin_customers_set_private_note', {
-    'customerId': orderForViewing.customer.id,
-    'back': path('admin_orders_view', {'orderId': orderForViewing.id})
-  })
-}) }}
-
-and
-
-<a class="dropdown-item"
- href="{{ getAdminLink('AdminAddresses', true, {
-   'realedit': 1,
-   'addaddress': 1,
-   'address_type': 1,
-   'id_order': orderForViewing.id,
-   'id_address': orderForViewing.shippingAddress.addressId,
-   'back': path('admin_orders_view', {'orderId': orderForViewing.id})
- }) }}"
->
-
-are different because "<a" raises the indent level.
-=> different usecases, whether the multi-line statement
-is also an opening statement or not !
