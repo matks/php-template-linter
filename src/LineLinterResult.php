@@ -12,6 +12,8 @@ class LineLinterResult
     public $updatedParsingStatus;
     /** @var string */
     public $operationPerformed;
+    /** @var string */
+    public $multiLineType;
 
     /**
      * @param string $lintedLine
@@ -19,11 +21,12 @@ class LineLinterResult
      * @param int $updatedParsingStatus
      * @param string $operationPerformed
      */
-    public function __construct($lintedLine, $updatedIndentationLevel, $updatedParsingStatus, $operationPerformed)
+    public function __construct($lintedLine, $updatedIndentationLevel, $updatedParsingStatus, $operationPerformed, $multiLineType = null)
     {
         $this->lintedLine = $lintedLine;
         $this->updatedIndentationLevel = $updatedIndentationLevel;
         $this->updatedParsingStatus = $updatedParsingStatus;
         $this->operationPerformed = $operationPerformed;
+        $this->multiLineType = $multiLineType;
     }
 }

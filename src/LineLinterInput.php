@@ -12,6 +12,8 @@ class LineLinterInput
     public $currentIndentationLevel;
     /** @var int */
     public $currentParsingStatus;
+    /** @var string */
+    public $multiLineType;
 
     /**
      * @param int $lineNumber
@@ -19,11 +21,12 @@ class LineLinterInput
      * @param int $currentIndentationLevel
      * @param int $currentParsingStatus
      */
-    public function __construct($lineNumber, $inputLine, $currentIndentationLevel, $currentParsingStatus)
+    public function __construct($lineNumber, $inputLine, $currentIndentationLevel, $currentParsingStatus, $multiLineType = null)
     {
         $this->lineNumber = $lineNumber;
         $this->inputLine = $inputLine;
         $this->currentIndentationLevel = $currentIndentationLevel;
         $this->currentParsingStatus = $currentParsingStatus;
+        $this->multiLineType = $multiLineType;
     }
 }
