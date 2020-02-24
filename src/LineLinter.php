@@ -30,7 +30,7 @@ class LineLinter
      */
     public function __construct(LineLinterConfiguration $configuration, $debug = false)
     {
-        $this->debug = true;
+        $this->debug = $debug;
 
         $this->configurationProcessor = new LineLinterConfigurationProcessor();
         $this->configurationProcessor->loadConfiguration($configuration);
@@ -361,7 +361,7 @@ class LineLinter
 
     /**
      * @param int $lineNumber
-     * @param string $currentIndentationLevel
+     * @param int $currentIndentationLevel
      *
      * @return int
      */
@@ -378,7 +378,7 @@ class LineLinter
 
     /**
      * @param int $lineNumber
-     * @param string $currentIndentationLevel
+     * @param int $currentIndentationLevel
      *
      * @return int
      */
