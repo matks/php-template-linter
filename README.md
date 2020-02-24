@@ -24,9 +24,51 @@ Primary usage (WIP) is to fix indentation. I might add more features later.
 
 ## Run
 
-`$ php linter fix <target>`
+`$ php linter fix <target> [--config] [--dry-run]`
 
-See `$ php linter fix -h` for available options
+See `$ php linter fix -h` for advanced help
+
+### Pass custom configuration
+
+You can provide your own configuration by using `--config` option. You must
+pass the filepath of a PHP configuration file.
+
+The configuration file must return an instance of `LineLinterConfiguration`.
+You can build this object in any way, however one suggested simple way to built it
+is to use `LineLinterConfiguration::fromArray()` method - see example below.
+
+```
+// config-custom.php
+<?php
+
+use Matks\PHPTemplateLinter\LineLinterConfigurationItem;
+use Matks\PHPTemplateLinter\LineLinterConfiguration;
+
+$configuration = [
+    LineLinterConfigurationItem::TYPE_IGNORE_CHAR => [
+        '{#', '*'
+    ],
+    LineLinterConfigurationItem::TYPE_OPENING_CHAR => [
+        '<div', '<form',
+        '<h', '<i', '<p', '<a',
+        '<thead', '<td', '<tr', '<th', '<table', '<tbody',
+        '<span', '<button', '<label',
+    ],
+    LineLinterConfigurationItem::TYPE_OPEN_AND_CLOSE_CHAR => [
+        '{% else'
+    ],
+    LineLinterConfigurationItem::TYPE_CLOSING_CHAR => [
+        '{% endblock', '{% endif', '{% endfor',
+        '</div', '</form',
+        '</h', '</i', '</p', '</a',
+        '</thead', '</td', '</tr', '</th', '</table', '</tbody',
+        '</span', '</button', '</label',
+    ],
+];
+
+return LineLinterConfiguration::fromArray($configuration, 2);
+
+```
 
 # Tests
 

@@ -2,7 +2,9 @@
 
 namespace Matks\PHPTemplateLinter\Command;
 
+use Matks\PHPTemplateLinter\DefaultConfiguration;
 use Matks\PHPTemplateLinter\FileExplorator;
+use Matks\PHPTemplateLinter\LineLinterConfiguration;
 use Matks\PHPTemplateLinter\LinterManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -51,6 +53,12 @@ class LinterCommand extends Command
 
         LinterManager::validateType($type);
 
+        if ($config) {
+            $configuration = $this->loadProvidedConfiguration($config);
+        } else {
+            $configuration = DefaultConfiguration::get();
+        }
+
         $explorator = new FileExplorator();
         $filesList = $explorator->findAllFilesInTarget($target, $type);
 
@@ -59,12 +67,27 @@ class LinterCommand extends Command
             return 0;
         }
 
-        $linterManager = new LinterManager();
+        $linterManager = new LinterManager($configuration);
 
         foreach ($filesList as $file) {
             $linterManager->lintFile($file, $type, $dryRun);
         }
 
         return 0;
+    }
+
+    private function loadProvidedConfiguration($configurationFilepath)
+    {
+        if (!file_exists($configurationFilepath)) {
+            throw new \InvalidArgumentException(sprintf('Provided configuration file %s does not exist', $configurationFilepath));
+        }
+
+        $loaded = require_once $configurationFilepath;
+
+        if (false === ($loaded instanceof LineLinterConfiguration)) {
+            throw new \InvalidArgumentException(sprintf('Provided configuration file must return a LineLinterConfiguration instance'));
+        }
+
+        return $loaded;
     }
 }

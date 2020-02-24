@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: mFerment
- * Date: 20/02/2020
- * Time: 17:09
- */
 
 namespace Matks\PHPTemplateLinter;
 
