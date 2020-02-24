@@ -107,7 +107,6 @@ Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 
 ### V1
 
-- enable use of custom config
 - enable use of dry-run option
 - handle debug
 
