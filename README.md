@@ -49,6 +49,13 @@ Run
 $ php tests/Acceptance/run.php
 ```
 
+# Quality
+
+Run
+```
+$ vendor/bin/phpstan analyse src tests --level=5
+```
+
 ## Insights
 
 Nothing fancy behind the curtain. I'm mostly using `strpos()` or
