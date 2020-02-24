@@ -114,9 +114,29 @@ class LineLinter
             );
         }
 
-        // handle regular lines that are eligible to indentation
-
         $noSpaceLine = ltrim($line, " \t");
+
+        // handle blank lines
+
+
+        if (($noSpaceLine === '') || ($noSpaceLine === PHP_EOL)) {
+
+            if ($noSpaceLine === $line) {
+                $operationPerformed = self::OPERATION_NOTHING;
+            } else {
+                $operationPerformed = self::OPERATION_FIXED;
+            }
+
+            return new LineLinterResult(
+                $noSpaceLine,
+                $currentIndentationLevel,
+                $currentParsingStatus,
+                $operationPerformed,
+                $multiLineType
+            );
+        }
+
+        // handle regular lines that are eligible to indentation
 
         $isOpeningLineLvl += $this->isOpeningLine($noSpaceLine, $lineNumber);
         $isSpecialLineLvl += $this->isSpecialLine($noSpaceLine, $lineNumber);
@@ -138,8 +158,6 @@ class LineLinter
             if ($this->debug) {
                 echo "Line $lineNumber - starts multiline statement (type: $multiLineType)" . PHP_EOL;
             }
-
-
         }
 
         $indentedLine = null;
