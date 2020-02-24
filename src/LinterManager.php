@@ -17,14 +17,17 @@ class LinterManager
 
     /**
      * @param LineLinterConfiguration $configuration
+     * @param bool $debug
      */
-    public function __construct(LineLinterConfiguration $configuration = null)
+    public function __construct(LineLinterConfiguration $configuration = null, $debug = false)
     {
+        $this->debug = $debug;
+
         if (null === $configuration) {
             $configuration = DefaultConfiguration::get();
         }
 
-        $this->lineLinter = new LineLinter($configuration);
+        $this->lineLinter = new LineLinter($configuration, $debug);
     }
 
     /**

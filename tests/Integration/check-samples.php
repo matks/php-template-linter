@@ -5,7 +5,8 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use Matks\PHPTemplateLinter\LinterManager;
 use MatksTests\TestUtils;
 
-$linter = new LinterManager();
+$debug = false;
+$linter = new LinterManager(null, $debug);
 
 $filesToTest = [
     'twig1.html.twig',

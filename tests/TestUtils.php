@@ -55,7 +55,8 @@ class TestUtils
                 continue;
             }
 
-            if (($line1 != $line2) && (($line1 !== '') && ($line2 !== ''))) {
+            // (($line1 !== '') && ($line2 !== ''))
+            if (($line1 != $line2)) {
                 $lineNumber = $x + 1;
                 $indent1 = self::findIndentationLevel($line1);
                 $indent2 = self::findIndentationLevel($line2);
