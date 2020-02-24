@@ -59,9 +59,14 @@ class LinterManager
 
         $handle = fopen($filepath, 'r+');
         $result = '';
+
+        // indentatiin state
         $currentIndentationLevel = 0;
-        $currentParsingStatus = 0;
         $lineNumber = 1;
+
+        // multiline state
+        $currentParsingStatus = 0;
+        $multiLineType = null;
 
         $i = 0;
         $report = [];
@@ -69,12 +74,13 @@ class LinterManager
         if ($handle) {
             while (($line = fgets($handle)) !== false) {
 
-                $input = new LineLinterInput($lineNumber, $line, $currentIndentationLevel, $currentParsingStatus);
+                $input = new LineLinterInput($lineNumber, $line, $currentIndentationLevel, $currentParsingStatus, $multiLineType);
 
                 $lintResult = $this->lineLinter->fixLineIndentation($input);
                 $lintedLine = $lintResult->lintedLine;
                 $currentParsingStatus = $lintResult->updatedParsingStatus;
                 $currentIndentationLevel = $lintResult->updatedIndentationLevel;
+                $multiLineType = $lintResult->multiLineType;
 
                 $report[$i] = $lintResult->operationPerformed;
 

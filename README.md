@@ -49,6 +49,13 @@ Run
 $ php tests/Acceptance/run.php
 ```
 
+# Quality
+
+Run
+```
+$ vendor/bin/phpstan analyse src tests --level=5
+```
+
 ## Insights
 
 Nothing fancy behind the curtain. I'm mostly using `strpos()` or
@@ -58,9 +65,9 @@ Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 
 ### V1
 
-- handle multi-line statements properly
 - enable use of custom config
 - enable use of dry-run option
+- handle debug
 
 ### Refacto
 - use Logger instead of echo

@@ -1,0 +1,24 @@
+{#**
+ * 2007-2015 Orka
+ *#}
+
+{% import '@PrestaShop/Admin/macros.html.twig' as ps %}
+
+{{ form_start(addressForm) }}
+<div class="card">
+     <div class="card-header"
+       style="aaa"
+  >
+    <i class="material-icons">mail_outline</i>
+     {{ 'Addresses'|trans({}, 'Admin.Navigation.Menu') }}
+  </div>
+
+  {{ ps.form_group_row(addressForm.other, {}, {
+    'label': 'Other'|trans({}, 'Admin.Global'),
+    'help' : 'Invalid characters:'|trans({}, 'Admin.Notifications.Info') ~ ' <>;=#{}'
+     }) }}
+
+  {{ form_rest(addressForm) }}
+
+</div>
+{{ form_end(addressForm) }}

@@ -26,6 +26,7 @@ try {
         'twig3.html.twig',
         'twig4.html.twig',
         'twig5.html.twig',
+        'sub/twig6.html.twig',
     ];
 
     foreach ($filesToTest as $file) {

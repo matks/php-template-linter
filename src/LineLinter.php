@@ -46,45 +46,101 @@ class LineLinter
         $line = $input->inputLine;
         $lineNumber = $input->lineNumber;
         $currentIndentationLevel = $input->currentIndentationLevel;
-        $currentParsingStatus = $input->currentParsingStatus;
+        $initialParsingStatus = $input->currentParsingStatus;
+        $multiLineType = $input->multiLineType;
 
-        if ($currentParsingStatus > 0) {
-            $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $currentParsingStatus);
+        $isOpeningLineLvl = 0;
+        $isSpecialLineLvl = 0;
+        $isClosingLineLvl = 0;
+
+        // handle multi-line statements
+
+        $weAreAlreadyInsideAMultilineStatement = ($initialParsingStatus > 0);
+
+        if ($weAreAlreadyInsideAMultilineStatement) {
 
             if ($this->debug) {
-                echo "Line $lineNumber is ignored because we are inside multi-line statement" . PHP_EOL;
+                echo "Line $lineNumber - already inside multiline statement" . PHP_EOL;
             }
 
-            return new LineLinterResult(
-                $line,
-                $currentIndentationLevel,
-                $currentParsingStatus,
-                self::OPERATION_IGNORED_BECAUSE_MULTILINE
-            );
+            $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $initialParsingStatus);
+
+            $isThisTheLastPartOfAMultilineStatement = ($currentParsingStatus === 0 && $initialParsingStatus > 0);
+
+            if (false === $isThisTheLastPartOfAMultilineStatement) {
+                if ($this->debug) {
+                    echo "Line $lineNumber is ignored because we are inside multi-line statement" . PHP_EOL;
+                }
+
+                return new LineLinterResult(
+                    $line,
+                    $currentIndentationLevel,
+                    $currentParsingStatus,
+                    self::OPERATION_IGNORED_BECAUSE_MULTILINE,
+                    $multiLineType
+                );
+            } else {
+                switch ($multiLineType) {
+                    case self::USECASE_OPEN_AND_CLOSE:
+                        $isSpecialLineLvl++;
+                        break;
+
+                    case self::USECASE_OPENING:
+                        $isSpecialLineLvl++;
+                        break;
+
+                    case self::USECASE_CLOSING:
+                        $isClosingLineLvl++;
+                        break;
+                }
+
+                if ($this->debug) {
+                    echo "Line $lineNumber - ends multiline statement (type : $multiLineType)" . PHP_EOL;
+                }
+            }
         }
+
+        $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $initialParsingStatus);
+
+        // handle ignored lines
 
         if ($this->shouldIgnoreThisLine($line, $lineNumber)) {
-            $currentParsingStatus = $this->updateParsingStatus($line, $lineNumber, $currentParsingStatus);
-
             return new LineLinterResult(
                 $line,
                 $currentIndentationLevel,
                 $currentParsingStatus,
-                self::OPERATION_IGNORED
+                self::OPERATION_IGNORED,
+                $multiLineType
             );
         }
+
+        // handle regular lines that are eligible to indentation
 
         $noSpaceLine = ltrim($line, " \t");
 
-        $isOpeningLineLvl = $this->isOpeningLine($noSpaceLine, $lineNumber);
-        $isSpecialLineLvl = $this->isSpecialLine($noSpaceLine, $lineNumber);
-        $isClosingLineLvl = $this->isClosingLine($noSpaceLine, $lineNumber);
+        $isOpeningLineLvl += $this->isOpeningLine($noSpaceLine, $lineNumber);
+        $isSpecialLineLvl += $this->isSpecialLine($noSpaceLine, $lineNumber);
+        $isClosingLineLvl += $this->isClosingLine($noSpaceLine, $lineNumber);
 
         $case = $this->findUsecase(
             $isOpeningLineLvl,
             $isSpecialLineLvl,
             $isClosingLineLvl
         );
+
+        // handle multiline statement beginning
+
+        $isFirstPartOfAMultilineStatement = ($currentParsingStatus > 0 && $initialParsingStatus === 0);
+
+        if ($isFirstPartOfAMultilineStatement) {
+            $multiLineType = $case;
+
+            if ($this->debug) {
+                echo "Line $lineNumber - starts multiline statement (type: $multiLineType)" . PHP_EOL;
+            }
+
+
+        }
 
         $indentedLine = null;
 
@@ -95,9 +151,9 @@ class LineLinter
                 break;
 
             case self::USECASE_OPEN_AND_CLOSE:
-                $currentIndentationLevel = $this->decrementIndentationLevel($currentIndentationLevel);
+                $currentIndentationLevel = $this->decrementIndentationLevel($lineNumber, $currentIndentationLevel);
                 $indentedLine = $this->putXBlankSpace($currentIndentationLevel) . $noSpaceLine;
-                $currentIndentationLevel = $this->incrementIndentationLevel($currentIndentationLevel);
+                $currentIndentationLevel = $this->incrementIndentationLevel($lineNumber, $currentIndentationLevel);
 
                 if ($indentedLine !== $line) {
                     $operationPerformed = self::OPERATION_FIXED;
@@ -108,7 +164,7 @@ class LineLinter
 
             case self::USECASE_OPENING:
                 $indentedLine = $this->putXBlankSpace($currentIndentationLevel) . $noSpaceLine;
-                $currentIndentationLevel = $this->incrementIndentationLevel($currentIndentationLevel);
+                $currentIndentationLevel = $this->incrementIndentationLevel($lineNumber, $currentIndentationLevel);
 
                 if ($indentedLine !== $line) {
                     $operationPerformed = self::OPERATION_FIXED;
@@ -119,7 +175,7 @@ class LineLinter
                 break;
 
             case self::USECASE_CLOSING:
-                $currentIndentationLevel = $this->decrementIndentationLevel($currentIndentationLevel);
+                $currentIndentationLevel = $this->decrementIndentationLevel($lineNumber, $currentIndentationLevel);
                 $indentedLine = $this->putXBlankSpace($currentIndentationLevel) . $noSpaceLine;
 
                 if ($indentedLine !== $line) {
@@ -134,13 +190,12 @@ class LineLinter
                 throw new \RuntimeException('Should never happen');
         }
 
-        $currentParsingStatus = $this->updateParsingStatus($noSpaceLine, $lineNumber, $currentParsingStatus);
-
         return new LineLinterResult(
             $indentedLine,
             $currentIndentationLevel,
             $currentParsingStatus,
-            $operationPerformed
+            $operationPerformed,
+            $multiLineType
         );
     }
 
@@ -212,7 +267,7 @@ class LineLinter
             $currentParsingStatus = $newCurrentParsingStatus;
 
             if ($this->debug) {
-                echo "Parsing status updated at line $lineNumber: " . $currentParsingStatus . PHP_EOL;
+                echo "line $lineNumber - parsing status updated to " . $currentParsingStatus . PHP_EOL;
             }
         }
 
@@ -304,18 +359,30 @@ class LineLinter
         return $result;
     }
 
-    public function incrementIndentationLevel($currentIndentationLevel)
+    /**
+     * @param int $lineNumber
+     * @param int $currentIndentationLevel
+     *
+     * @return int
+     */
+    public function incrementIndentationLevel($lineNumber, $currentIndentationLevel)
     {
         $currentIndentationLevel += $this->configurationProcessor->getIndentationLevel();
 
         if ($this->debug) {
-            echo "Indentation level raised to " . $currentIndentationLevel . PHP_EOL;
+            echo "Line $lineNumber - indentation level raised to " . $currentIndentationLevel . PHP_EOL;
         }
 
         return $currentIndentationLevel;
     }
 
-    public function decrementIndentationLevel($currentIndentationLevel)
+    /**
+     * @param int $lineNumber
+     * @param int $currentIndentationLevel
+     *
+     * @return int
+     */
+    public function decrementIndentationLevel($lineNumber, $currentIndentationLevel)
     {
         $currentIndentationLevel -= $this->configurationProcessor->getIndentationLevel();
 
@@ -324,7 +391,7 @@ class LineLinter
         }
 
         if ($this->debug) {
-            echo "Indentation level decreased to " . $currentIndentationLevel . PHP_EOL;
+            echo "Line $lineNumber - indentation level decreased to " . $currentIndentationLevel . PHP_EOL;
         }
 
         return $currentIndentationLevel;
