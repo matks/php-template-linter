@@ -48,7 +48,7 @@ try {
 
         if (false === $result) {
             echo 'Failure !';
-            return 255;
+            exit(255);
         }
 
         echo PHP_EOL;
@@ -63,5 +63,5 @@ try {
 }
 
 echo 'All acceptance tests pass !' . PHP_EOL;
-return 0;
+exit(0);
 

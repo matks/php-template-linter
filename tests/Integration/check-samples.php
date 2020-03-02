@@ -15,6 +15,7 @@ $filesToTest = [
     'twig4.html.twig',
     'twig5.html.twig',
     'twig6.html.twig',
+    'twig7.html.twig',
 ];
 
 foreach ($filesToTest as $file) {
@@ -36,11 +37,11 @@ foreach ($filesToTest as $file) {
 
     if ($result === false) {
         echo 'Failure !'.PHP_EOL;
-        return 255;
+        exit(255);
     }
 
     echo PHP_EOL;
 }
 
 echo 'All configuration tests pass !' . PHP_EOL;
-return 0;
+exit(0);
