@@ -19,9 +19,10 @@ class DefaultConfiguration
             LineLinterConfigurationItem::TYPE_OPENING_CHAR => [
                 '{% block', '{% if', '{% for',
                 '<div', '<form',
-                '<h', '<i', '<p', '<a',
+                '<h', '<i>', '<p', '<a', '<i ',
                 '<thead', '<td', '<tr', '<th', '<table', '<tbody',
                 '<span', '<button', '<label',
+                '<ul', '<li', '<select',
             ],
             LineLinterConfigurationItem::TYPE_OPEN_AND_CLOSE_CHAR => [
                 '{% else'
@@ -29,9 +30,10 @@ class DefaultConfiguration
             LineLinterConfigurationItem::TYPE_CLOSING_CHAR => [
                 '{% endblock', '{% endif', '{% endfor',
                 '</div', '</form',
-                '</h', '</i', '</p', '</a',
+                '</h', '</i>', '</p', '</a', '</i ',
                 '</thead', '</td', '</tr', '</th', '</table', '</tbody',
                 '</span', '</button', '</label',
+                '</ul', '</li', '</select',
             ],
         ];
 
