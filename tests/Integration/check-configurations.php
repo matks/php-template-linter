@@ -75,7 +75,7 @@ foreach ($filesToTest as $i => $expectedName) {
 
     if ($result === false) {
         echo 'Failure !'.PHP_EOL;
-        return 255;
+        exit(255);
     }
 
     echo PHP_EOL;
@@ -83,4 +83,4 @@ foreach ($filesToTest as $i => $expectedName) {
 
 
 echo 'All configuration tests pass !' . PHP_EOL;
-return 0;
+exit(0);

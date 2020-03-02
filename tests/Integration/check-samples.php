@@ -5,16 +5,16 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 use Matks\PHPTemplateLinter\LinterManager;
 use MatksTests\TestUtils;
 
-$debug = true;
+$debug = false;
 $linter = new LinterManager(null, $debug);
 
 $filesToTest = [
-    /*'twig1.html.twig',
+    'twig1.html.twig',
     'twig2.html.twig',
     'twig3.html.twig',
     'twig4.html.twig',
     'twig5.html.twig',
-    'twig6.html.twig',*/
+    'twig6.html.twig',
     'twig7.html.twig',
 ];
 
@@ -37,11 +37,11 @@ foreach ($filesToTest as $file) {
 
     if ($result === false) {
         echo 'Failure !'.PHP_EOL;
-        return 255;
+        exit(255);
     }
 
     echo PHP_EOL;
 }
 
 echo 'All configuration tests pass !' . PHP_EOL;
-return 0;
+exit(0);

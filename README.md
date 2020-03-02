@@ -72,6 +72,8 @@ return LineLinterConfiguration::fromArray($configuration, 2);
 
 # Tests
 
+To run all tests, you can use bash script `tests/run_all_tests.sh`
+
 ## Unit
 
 Run `$ vendor/bin/phpunit tests/`
@@ -102,19 +104,3 @@ $ vendor/bin/phpstan analyse src tests --level=5
 
 Nothing fancy behind the curtain. I'm mostly using `strpos()` or
 `preg_match()` to parse files.
-
-## TODO
-
-### V1
-
-- enable use of dry-run option
-- handle debug
-
-### Refacto
-- use Logger instead of echo
-- use OutputInterface instead of echo
-- better folder structure
-
-### V2
-
-Handle Smarty templates
